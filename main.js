@@ -34,6 +34,7 @@ class JangAemul {
 //프레임 위주
 let timer = 0;
 let catus1 = [];
+let jumpTimer = 0;
 function EdongJung() {
   requestAnimationFrame(EdongJung);
   timer++;
@@ -43,10 +44,41 @@ function EdongJung() {
     catus1.push(catus);
     catus.draw();
   }
-  catus1.forEach((a) => {
+  catus1.forEach((a, i, o) => {
+    //x좌표가 0미만이면 제거
+    if (a.x < 10) {
+      o.splice(i, 1);
+    }
     a.x--;
     a.draw();
   });
+
+
+
+
+  if (jump == true) {
+    dino.y--;
+    jumpTimer++;
+  }
+  if (jump == false) {
+    if (dino.y < 200) {
+      dino.y++;
+    }
+  }
+  if (jumpTimer > 100) {
+    jump = false;
+    jumpTimer = 0;
+  }
   dino.draw();
 }
 EdongJung();
+
+var jump = false;
+document.addEventListener('keydown', function (e) {
+  if (e.code === 'Space') {
+    jump = true;
+  }
+});
+//requestAnimationFrame(EdongJung);
+//collision detection
+
