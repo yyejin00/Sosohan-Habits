@@ -4,14 +4,20 @@ var ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth - 100;
 canvas.height = window.innerHeight - 100;
 
+let 주인공 = new Image();
+주인공.src = 'me.png';
+let 방해 = new Image();
+방해.src = 'squirrel.png';
+
 var dino = {
   x: 10,
   y: 200,
   width: 50,
-  height: 50,
+  height: 124,
   draw() {
     ctx.fillStyle = 'green';
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    //ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.drawImage(주인공, this.x, this.y);
   },
 }; //객체로 캐릭터 저장
 dino.draw();
@@ -25,7 +31,8 @@ class JangAemul {
   }
   draw() {
     ctx.fillStyle = 'red';
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    //ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.drawImage(방해, this.x, this.y);
   }
 }
 
@@ -35,8 +42,9 @@ class JangAemul {
 let timer = 0;
 let catus1 = [];
 let jumpTimer = 0;
+let animation;
 function EdongJung() {
-  requestAnimationFrame(EdongJung);
+  animation = requestAnimationFrame(EdongJung);
   timer++;
   ctx.clearRect(0, 0, canvas.width, canvas.height); //이동된만큼 삭제해서 앞으로 가는 것처럼 보이게!
   if (timer % 120 === 0) {
@@ -50,11 +58,9 @@ function EdongJung() {
       o.splice(i, 1);
     }
     a.x--;
+    IsCollision(dino, a);
     a.draw();
   });
-
-
-
 
   if (jump == true) {
     dino.y--;
@@ -81,4 +87,10 @@ document.addEventListener('keydown', function (e) {
 });
 //requestAnimationFrame(EdongJung);
 //collision detection
-
+function IsCollision(dino, catus) {
+  var x = catus.x - (dino.x + dino.width);
+  var y = catus.y - (dino.y + dino.height);
+  if (x < 0 && y < 0) {
+    cancelAnimationFrame(animation);
+  }
+}
